@@ -17,7 +17,20 @@ jobs:
     - name: Install Cordova
       run: npm install -g cordova
     - name: Add Android Platform
-      run: cordova platform add android
+      run: |
+        cordova platform remove android || true
+        cordova platform add android
+    - name: Copy native files
+      run: |
+        cp platforms/android/app/src/main/AndroidManifest.xml /tmp/manifest_backup.xml
+        cp -r platforms/android/app/src/main/res/drawable/icon_*.xml /tmp/
+        cp platforms/android/app/src/main/java/com/secretchat/app/IconSwitcher.java /tmp/
+    - name: Restore native files after platform add
+      run: |
+        cp /tmp/manifest_backup.xml platforms/android/app/src/main/AndroidManifest.xml
+        cp /tmp/icon_*.xml platforms/android/app/src/main/res/drawable/
+        mkdir -p platforms/android/app/src/main/java/com/secretchat/app/
+        cp /tmp/IconSwitcher.java platforms/android/app/src/main/java/com/secretchat/app/
     - name: Build APK
       run: cordova build android
     - name: Find APK
