@@ -10,4 +10,5 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <feature name="IconSwitcher"><param name="android-package" value="com.secretchat.app.IconSwitcher"/></feature>
 </widget>
