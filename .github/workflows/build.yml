@@ -16,6 +16,8 @@ jobs:
         node-version: '18'
     - name: Install Cordova
       run: npm install -g cordova
+    - name: Add Android Platform
+      run: cordova platform add android
     - name: Build APK
       run: cordova build android
     - name: Find APK
