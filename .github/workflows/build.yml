@@ -11,28 +11,13 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-    - name: Install Cordova
-      run: npm install -g cordova
-    - name: Backup native files
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    - name: Build APK with Gradle
       run: |
-        mkdir -p /tmp/native/drawable
-        mkdir -p /tmp/native/java/com/secretchat/app
-        cp platforms/android/app/src/main/AndroidManifest.xml /tmp/native/
-        cp platforms/android/app/src/main/res/drawable/icon_*.xml /tmp/native/drawable/
-        cp platforms/android/app/src/main/java/com/secretchat/app/IconSwitcher.java /tmp/native/java/com/secretchat/app/
-    - name: Add Android Platform
-      run: cordova platform add android
-    - name: Restore native files
-      run: |
-        cp /tmp/native/AndroidManifest.xml platforms/android/app/src/main/AndroidManifest.xml
-        cp /tmp/native/drawable/icon_*.xml platforms/android/app/src/main/res/drawable/
-        mkdir -p platforms/android/app/src/main/java/com/secretchat/app/
-        cp /tmp/native/java/com/secretchat/app/IconSwitcher.java platforms/android/app/src/main/java/com/secretchat/app/
-    - name: Build APK
-      run: cordova build android
+        cd platforms/android
+        chmod +x gradlew
+        ./gradlew assembleDebug
     - name: Find APK
       run: find . -name "*.apk"
     - uses: actions/upload-artifact@v4
