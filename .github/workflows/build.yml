@@ -13,10 +13,23 @@ jobs:
         distribution: 'temurin'
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-    - name: Build APK with Gradle
+    - name: Fix gradle wrapper
       run: |
         cd platforms/android
         chmod +x gradlew
+    - name: Copy www to assets
+      run: |
+        mkdir -p platforms/android/app/src/main/assets/www
+        cp www/index.html platforms/android/app/src/main/assets/www/index.html
+        echo "Copied index.html to assets"
+        grep "dis:lg" platforms/android/app/src/main/assets/www/index.html | head -2
+    - name: Restore native files
+      run: |
+        cp platforms/android/app/src/main/AndroidManifest.xml platforms/android/app/src/main/AndroidManifest.xml
+        mkdir -p platforms/android/app/src/main/java/com/secretchat/app/
+    - name: Build APK with Gradle
+      run: |
+        cd platforms/android
         ./gradlew assembleDebug
     - name: Find APK
       run: find . -name "*.apk"
